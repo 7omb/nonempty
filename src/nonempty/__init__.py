@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from functools import total_ordering
 from typing import (
     TYPE_CHECKING,
-    Callable,
     Generic,
     Self,
     SupportsIndex,
