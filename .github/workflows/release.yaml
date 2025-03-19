@@ -31,7 +31,7 @@ jobs:
       id-token: write
 
     environment:
-      name: pypi
+      name: release
       url: https://pypi.org/p/nonempty
 
     steps:
