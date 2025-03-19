@@ -11,11 +11,15 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         pythonEnv = pkgs.python313;
+        pythonVersions = with pkgs; [
+          pythonEnv
+          python312
+          python311
+        ];
       in
       {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            pythonEnv
             pyright
             uv
             direnv
@@ -23,18 +27,25 @@
             pre-commit
             entr
             gnumake
-
-            # tox:
-            python312
-            python311
-            python310
-          ];
+          ] ++ pythonVersions;
           # Use nix-ld when on NixOS, because ruff depends on libc:
           NIX_LD_LIBRARY_PATH = with pkgs; lib.makeLibraryPath [
             stdenv.cc.cc
           ];
           # Let uv use the python version of this flake by default:
           UV_PYTHON = pythonEnv.interpreter;
+        };
+
+        apps.tox = flake-utils.lib.mkApp {
+          drv = pkgs.writeShellApplication {
+            name = "run-tox";
+            runtimeInputs = with pkgs; [
+              uv
+            ] ++ pythonVersions;
+            text = ''
+              uv run tox
+            '';
+          };
         };
 
         formatter = pkgs.nixpkgs-fmt;
