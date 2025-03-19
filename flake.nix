@@ -48,6 +48,19 @@
           };
         };
 
+        apps.build = flake-utils.lib.mkApp {
+          drv = pkgs.writeShellApplication {
+            name = "build";
+            runtimeInputs = with pkgs; [
+              uv
+              pythonEnv
+            ];
+            text = ''
+              uv build
+            '';
+          };
+        };
+
         formatter = pkgs.nixpkgs-fmt;
       });
 }
